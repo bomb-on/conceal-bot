@@ -1,0 +1,15 @@
+{
+  "token": "NDU1MTcxNDY3MTM5ODc0ODI2.DguTaw.N0SuTyu5YDuZ4kbQnh1EubpiYl4",
+  "prefix": ".",
+  "coin": "conceal",
+  "symbol": "CCX", 
+  "units": 1000000,
+  "tipjar_address": "ccx7Wga6b232eSVfy8KQmBjho5TRXxX8rZ2zoCTyixfvEBQTj1g2Ysz1hZKxQtw874W3w6BZkMFSn5h3gUenQemZ2xiyyjxBR7",
+  "daemon_host": "127.0.0.1",
+  "daemon_port": "16000",
+  "rpc_password":"",
+  "rpc_host": "127.0.0.1",
+  "rpc_port": "6062",
+  "logo_url": "https://media.discordapp.net/attachments/456094955346067456/459110825328771083/conceal-logo-trans.png?width=780&height=910"
+}
+
