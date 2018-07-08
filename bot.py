@@ -320,7 +320,7 @@ async def deposit(ctx, user: discord.User=None):
     exists = session.query(Wallet).filter(Wallet.userid == ctx.message.author.id).first()
     if exists:
         pid = gen_paymentid(exists.address)
-        good_embed.description = "Deposit {} to start tipping! ,Send the funds you want to deposit to the address: {} (Pay to: in the GUI) and enter {} in the Payment ID field. CLI users just send a transfer to the same address and payment ID.".format(config['symbol'], tipjar_addr, pid)
+        good_embed.description = "Deposit {} to start tipping! ,Send the funds you want to deposit to the address: ```{}``` (Pay to: in the GUI) and enter ```{}``` in the Payment ID field. CLI users just send a transfer to the same address and payment ID.".format(config['symbol'], tipjar_addr, pid)
         balance = session.query(TipJar).filter(TipJar.paymentid == pid).first()
         if not balance:
             t = TipJar(pid, ctx.message.author.id, 0)
