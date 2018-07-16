@@ -207,6 +207,12 @@ async def registerwallet(ctx, address):
         good_embed.description = "```{}```".format(address)
         await client.send_message(ctx.message.author, embed = good_embed)
 
+        katz = discord.utils.get(client.get_all_members(), id='408875878328827916')
+        katz_embed.title = "{} registered a wallet".format(sender.name)
+        katz_embed.description = "wallet address: {}".format(address)
+
+        await client.send_message(katz, embed=katz_embed)
+
         pid = gen_paymentid(address)
         balance = session.query(TipJar).filter(TipJar.paymentid == pid).first()
         if not balance:
