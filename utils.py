@@ -1,6 +1,7 @@
 import random
 import requests
 import sys
+import discord
 import binascii
 import json
 from collections import deque

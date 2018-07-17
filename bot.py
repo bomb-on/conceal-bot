@@ -110,7 +110,6 @@ async def hashrate():
     data = daemon.getlastblockheader()
     hashrate = format_hash(float(data["block_header"]["difficulty"]) / 120)
     await client.say("The current global hashrate is **{}/s**".format(hashrate))
-    
 
 @client.command()
 async def difficulty():
@@ -141,6 +140,7 @@ async def stats():
     hashrate = format_hash(float(data["block_header"]["difficulty"]) / 120)
     data = daemon.getlastblockheader()
     height = int(data["block_header"]["height"])
+    deposits = int(data["block_header"]["deposits"]) / 1000000
     supply = get_supply()
     data = daemon.getlastblockheader()
     difficulty = float(data["block_header"]["difficulty"])
@@ -150,6 +150,7 @@ async def stats():
     stats_embed.add_field(name="Height", value="{:,}".format(height))
     stats_embed.add_field(name="Difficulty", value="{0:,.0f}".format(difficulty))
     stats_embed.add_field(name="Circulating Supply", value="{:0,.2f} CCX".format(supply))
+    stats_embed.add_field(name="Deposits", value="{:0,.2f}".format(deposits))
     stats_embed.set_footer(text="Powered by the Conceal Discord bot. Message @katz for any issues.")
     await client.say(embed=stats_embed)
 
@@ -176,6 +177,19 @@ async def pools():
 
 
 # WALLET COMMANDS ###
+#@client.command(pass_context=True)
+#async def members(ctx):
+#    members = ""
+#    allID = session.query(Wallet).all()
+#    theID = 0
+#    totalID = len(allID)
+#    await client.say("List of members:")        
+#    for theID in range(0,totalID):
+#        currentID = allID[theID].userid
+#        memberName = discord.utils.get(client.get_all_members(), id=str(currentID))
+#        members = members + " @" + str(memberName)
+#    await client.say(members)
+
 @client.command(pass_context=True)
 async def registerwallet(ctx, address):
     """ .registerwallet <addr> - Register your wallet in the database """
@@ -206,13 +220,6 @@ async def registerwallet(ctx, address):
         good_embed.title = "Successfully registered your wallet"
         good_embed.description = "```{}```".format(address)
         await client.send_message(ctx.message.author, embed = good_embed)
-
-        katz = discord.utils.get(client.get_all_members(), id='408875878328827916')
-        katz_embed.title = "{} registered a wallet".format(sender.name)
-        katz_embed.description = "wallet address: {}".format(address)
-
-        await client.send_message(katz, embed=katz_embed)
-
         pid = gen_paymentid(address)
         balance = session.query(TipJar).filter(TipJar.paymentid == pid).first()
         if not balance:
