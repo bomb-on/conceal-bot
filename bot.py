@@ -144,8 +144,15 @@ async def stats():
     supply = get_supply()
     data = daemon.getlastblockheader()
     difficulty = float(data["block_header"]["difficulty"])
-    stats_embed=discord.Embed(title="Conceal", url="https://github.com/TheCircleFoundation/concealx", description="Complete Network Stats", color=0x7F7FFF)
+    stats_embed=discord.Embed(title="Conceal", url="https://github.com/TheCircleFoundation/", description="Complete Network Stats", color=0x7F7FFF)
     stats_embed.set_thumbnail(url=config['logo_url'])    
+    hashFromPools = 0
+    allPools = session2.query(pool).all()
+    totalPools = len(allPools)
+    for poolNumber in range(0,totalPools):        
+        poolHash = allPools[poolNumber].hashrate
+        hashFromPools = hashFromPools + poolHash
+    stats_embed.add_field(name="Hashrate (from Pools)", value="{}KH/s".format(hashFromPools/1000))       
     stats_embed.add_field(name="Hashrate (from Difficulty)", value="{}/s".format(hashrate))
     stats_embed.add_field(name="Height", value="{:,}".format(height))
     stats_embed.add_field(name="Difficulty", value="{0:,.0f}".format(difficulty))
@@ -158,7 +165,7 @@ async def stats():
 @client.command()
 async def pools():
     """ .pools - Get a list of pools and current stats """
-    stats_embed=discord.Embed(title="Conceal", url="https://github.com/TheCircleFoundation/concealx", description="Mining Pool Stats", color=0x7F7FFF)
+    stats_embed=discord.Embed(title="Conceal", url="https://github.com/TheCircleFoundation/", description="Mining Pool Stats", color=0x7F7FFF)
     stats_embed.set_thumbnail(url=config['logo_url'])    
     hashFromPools = 0
     allPools = session2.query(pool).all()
@@ -171,7 +178,8 @@ async def pools():
         poolMiners = allPools[poolNumber].miners
         stats_embed.add_field(name=poolName, value=poolSiteURL, inline=False)
         stats_embed.add_field(name="Hashrate", value="{} KH/s".format(poolHash/1000))
-        stats_embed.add_field(name="Miners", value="{:,}".format(poolMiners))      
+        stats_embed.add_field(name="Miners", value="{:,}".format(poolMiners))     
+    stats_embed.add_field(name="Hashrate (from Pools)", value="{}KH/s".format(hashFromPools/1000))           
     stats_embed.set_footer(text="Powered by the Conceal Discord bot. Message @katz for any issues.")
     await client.say(embed=stats_embed)
 
@@ -361,6 +369,7 @@ async def balance(ctx, user: discord.User=None):
             session.commit()
         else:
             good_embed.description = "`{0:,.2f}` {1}".format(balance.amount / config['units'], config['symbol'])
+            good_embed.add_field(name="Widthrawal", value="You can tip yourself to widthraw CCX to your wallet")
             await client.send_message(ctx.message.author, embed=good_embed)
     else:
         err_embed.description = "You haven't registered a wallet!"
